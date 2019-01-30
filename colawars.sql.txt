@@ -1,0 +1,788 @@
+﻿DROP DATABASE IF EXISTS colawars;
+CREATE DATABASE colawars;
+USE colawars;
+
+CREATE TABLE Location
+(
+  name VARCHAR(100) NOT NULL,
+  info VARCHAR(1000) NOT NULL,
+  ID INT NOT NULL,
+  PRIMARY KEY (ID)
+);
+
+CREATE TABLE NPC
+(
+  ID INT NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  Info VARCHAR(1000) NOT NULL,
+  locationID INT NOT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (locationID) REFERENCES Location(ID)
+);
+
+CREATE TABLE LocationAllowed
+(
+  Direction VARCHAR(100) NOT NULL,
+  locationFrom INT NOT NULL,
+  locationTo INT NOT NULL,
+  LocationALLOWED INT,
+  ID INT NOT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (locationFrom) REFERENCES Location(ID),
+  FOREIGN KEY (locationTo) REFERENCES Location(ID)
+);
+
+CREATE TABLE Puzzle
+(
+  ID INT NOT NULL,
+  completed INT,
+  puzzleInfo VARCHAR(500) NOT NULL,
+  locationID INT,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (locationID) REFERENCES Location(ID)
+);
+
+CREATE TABLE Events
+(
+ID INT NOT NULL,
+  completed INT,
+  Info VARCHAR(500) NOT NULL,
+  locationID INT,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (locationID) REFERENCES Location(ID)
+);
+
+CREATE TABLE Player
+(
+  ID INT NOT NULL,
+  locationID INT,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (locationID) REFERENCES Location(ID)
+);
+
+CREATE TABLE Item
+(
+  ID INT NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  description VARCHAR(1000) NOT NULL,
+  info VARCHAR(1000) NOT NULL,
+  locationID INT,
+  playerID INT,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (locationID) REFERENCES Location(ID),
+  FOREIGN KEY (playerID) REFERENCES Player(ID)
+);
+
+CREATE TABLE Questions
+(
+ ID INT NOT NULL,
+ Question VARCHAR(1000) NOT NULL,
+ Locationid INT,
+ PRIMARY KEY (ID),
+ FOREIGN KEY (LocationID) REFERENCES Location(ID)
+);
+
+CREATE TABLE Dialog
+(
+  ID INT NOT NULL,
+  Answer VARCHAR(1000) NOT NULL,
+  locationID INT,
+  PRIMARY KEY (ID),
+  QuestionsID INT,
+  FOREIGN KEY (QuestionsID) REFERENCES Questions(ID),
+  FOREIGN KEY (locationID) REFERENCES location(ID)
+);
+
+
+CREATE TABLE Memory
+(
+  ID INT NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  description VARCHAR(1000) NOT NULL,
+  info VARCHAR(1000) NOT NULL,
+  playerID INT,
+  DialogID INT,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (playerID) REFERENCES Player(ID),
+  FOREIGN KEY (DialogID) REFERENCES Dialog(ID)
+);
+ 
+
+
+#Locations
+
+insert into location
+values("Trash container", "Looks as someone is living in it and for some reason someone has written 'Phones have lights' everywhere. Up is the alley", 1);
+
+insert into location
+values("Dirty alley", "you see a wall to your north. In the east is a wall and two trash containers in front of it. 
+To the south is an alley leading to the street. To the west is a wall with three bums in front of it", 2);
+
+insert into location 
+values("Scrub street", "To the east there is a street. You cant see where it ends but you see a taxi with its driver standing next to it. 
+The taxi has a Ranjit rides logo on it. To the south there is a old looking 3 floor high apartment building, that seems to have seen its best days. 
+To the west you see a person standing next to a highway with cars running by at high speed. North is a alley with a young woman standing before it", 3);
+
+insert into location 
+values("Old man´s apartment", "You see pizza boxes everywhere and paintings of a man in a red shirt and jeans on the walls, 
+a door on the west side of the room, a staircase to the south, a wall to the east and the door leading to the street in the north" , 4);
+
+insert into location
+values("Taxi", "There are buildings to the south. A endless looking street in the east heading to the business part of town. 
+there is an intersection leading north to the Huosing part of town and  west back to the street.", 5);
+
+insert into location 
+values("Highway", "Road is 4 lanes wide and there's a small corner to the south so you cant quite see the approaching cars all that well, 
+to the north there is a bridge going over a railway, you see something glimmering in the other side of the road, anyway there are coming your way, 
+you should move fast and decisively", 6);
+
+insert into location
+values("Official street", "Nice looking neighberhood with bushes and green grass next to the buildings and statues of people. 
+On the west side of the street you see the police station. on the east side of the street you see a internet cafe. 
+Up a head to your north u see a police officer standing next to something 
+and on the south side of the street is the taxi with its driver standing there next to it", 7);
+
+insert into location 
+values("Police station", "You step inside a corridor with light blue coloring on the walls, 
+a white floor and lots of blue chair around the room next to the walls. On the north side of the room is a door with text on it saying staff only. 
+In the south side is a door with a wc sign on top of it on the door is a sign saying out of order. 
+in the west part of the room is a booth with an old man sitting behind it and corridor on left side of it. 
+The door leading out to the street is located on the east side of the room.", 8);
+
+insert into location 
+values("Roadblock 2", "you stand in front a roadblock there are constuction machinery in the north on the other side of the roadblock. 
+West is a statue of a police man. East is a kindergarden with children playing outside. South is official street", 9);
+
+insert into location 
+values("Internet cafe", "A room with brown colored walls and a beige floor. 
+there are lots of tables with computers on them and windows on the wall located on the north side of the room. 
+East is more tables without computers and windows with a book shelve between two windows on the wall and a door with wc text on it. 
+South is counter with a employee standing behind it and a staff only door with weird smoke coming through its cracks. West is the main entrance.", 10);
+
+insert into location 
+values("Enterprise avenue", "Tall buildings with lots of corporate logos everywhere. 
+On the north side of the street there is a red building with a large Coca-cola logo above the entrance, 
+there's also a familiar looking man standing by the door. The street continues to the east with a man standing in the middle of the street. 
+South is a large blue building with a pepsi logo above the entrance and large man standing in front of the entrance. 
+West is the the taxi with its driver next to it smoking a cigarette.", 11);
+
+insert into location 
+values("Entrance to pepsilandia", "East is the entrance to pepsilandia with a man dressed in blue in front of it. 
+South is the exit tunnel from pepsilandia. West is enterprise avenue. North is the official Coca cola merchandise store but it looks closed.", 12);
+
+insert into location 
+values("Coca-cola center", "Red everywhere, walls, floor, furniture and people´s clothing. 
+On the north side of the room is a guy painting a beautiful landscape of a forest and for some reason he is painting a coke bottle on it. 
+east is the helpdesk with a man standing in front of it, talking to the deskclerk. South is the entrance you came thorought. West is ?", 13);
+
+insert into location 
+values("Pepsilandia", "There are lots of Pepsi employees moving around the area. On the north is the entrance you came throught. 
+East is a large blue rollercoaster with a long line of people standing in queue. 
+South is a large ferris wheel with a Pepsi logo in the middle of it. West is the Pepsi building with a door that has a sign staff only.", 14);
+
+insert into location 
+values("Pepsi enterprises", "Blue everyehere. North is the main entrance. East is pepsilandia. South is a elevator. 
+West is the reception but its empty and blue coachs next to it.", 15);
+
+insert into location 
+values("Elevator", "A metallic room with buttons that make it go up and down", 16);
+
+insert into location 
+values("Pepsi CEO´s office", "You step inside a room with windows that start from the floor and end at the sealing on the north side of the room. 
+east is the elevator you came out off. South is shelves filled with books. 
+There are a few chairs and a table in front of them and a globe that is opened with beverages in it. 
+West is a desk with a man sitting behind it with a large oil paint of himself on the wall. (Must be someone important?)", 17);
+
+
+
+
+
+#NPCs
+insert into npc
+value(1,"Wheelchair Mike","Pirate looking bum in a wheelchair",2);
+insert into npc
+value(2,"Crazy Steve", "Crazy looking bum with some sort fetish on lights",2); 
+insert into npc
+value(3,"Religious Reggie","Religious and delusional looking bum",2);
+insert into npc
+value(4,"Wendy","Red haired woman, quite hot i must say",3);
+insert into npc
+value(5,"Harald the Hazardous","Bum with taste for danger",3);
+insert into npc
+value(6,"Papa John","Old looking man that likes pizza",4);
+insert into npc
+value(7,"Ranjit","Your favourite indian taxidriver",3);
+insert into npc
+value(9,"Police officer","Grumpy old police officer",8);
+insert into npc
+value(10,"Andy","The same grumpy old police officer you met earlier",11);
+insert into npc
+value(11,"Matt","The Cafe clerk. ",10);
+insert into npc
+value(12,"John","Your boss",13);
+insert into npc
+value(13,"Michael","Young pepsi goon.",11);
+insert into npc
+value(14,"Lionel","The biggest pepsi lover",11);
+insert into npc
+value(15,"Enrique","Pepsi supervillain?",15);
+insert into npc
+value(16,"Pepsi CEO","Corrupt man with heart of evil",17);
+
+#NPC LOCATIONS
+insert into location
+value("Wheelchair Mike","Long hair and beard. Has a hook on his left hand and a leg prosthesis in his right leg. Sits in a wheelchair. 
+Dirty clothes. I guess he would fit the definition of modern pirate perfectly",18);
+insert into location
+value("Crazy Steve", "Bald man with a beard, dirty clothes. Seems to be kinda nutty and repeating the same sentence over and over. Phones have light´s.",19); 
+insert into location
+value("Religious Reggie","Has long hair and beard, has a hat and staff to go with your everyday clothing. 
+Seems to think he is jesus christ and is trying to share with you the message of god",20);
+insert into location
+value("Wendy","Red haired woman, seemingly frightened and worried about you, seems like the first sane person you have encountered so far",21);
+insert into location
+value("Harald the Hazardous","Seems like your everyday hobo at first but he seems to have a weird hobby of throwing coins into the highway 
+and retrieving them, i should retain from doing anything stupid if possible",22);
+insert into location
+value("Papa John","Old man keeps looking deep into your eyes, it seems like he thinks you hold some hidden knowledge about something? Creeeepy. 
+Anyway he seems a bit senile and kinda crazy. Unfortunately it doesn't seem like I have any other option than to play along with his madness.",23);
+insert into location
+value("Ranjit","Friendly looking man of probably indian origin, seems willing to drive you around the town given fair compensation",24);
+insert into location
+value("Police officer","Grumpy looking old man, 
+who doesnt seem too interested in your situation but is forced to do his job for a while longer before getting ready for retirement",26);
+insert into location
+value("Andy","The same grumpy looking police officer you encountered earlier at the station, 
+seems like he was corrupt and working for pepsi enterprises all along",27);
+insert into location
+value("Matt","The Cafe clerk. He seems to recognize you, maybe he would be willing to help me in my situation?",28);
+insert into location
+value("John","Middle aged, has a bald spot behind his head, Wearing all red and has a coca cola tattoo on his right arm. 
+This man seems to be in charge of all things red?, Perhaps he can offer me some advice.",29);
+insert into location
+value("Michael","Young, fairly tall individual wearing all blue, 
+seems to think highly of himself for no apparent reason(as if he was a smooth criminal or something).",30);
+insert into location
+value("Lionel","When you walked by earlier this individual seemed to be hugging a blue pepsi can advertisement, 
+seems like his mind is corrupted with pure love for all things blue. Unfortunately he doesn't seem too willing to let me pass.",31);
+insert into location
+value("Enrique","Wears some sort of superhero costume with pepsi logo on it. 
+His belly looks like it has seen a bit too many liters of cola so the overall impact of persona feels kinda all over the place ridiculous. 
+He seems like a tough nut to crack nevertheless so better just avoid him",32);
+insert into location
+value("Pepsi CEO","Tall man wearing all blue, his age is hard to measure because even his face seems to be glowing blue. 
+He seems to be very sure of himself and has that aura of power that only few people possess. 
+Too bad it feels disgustingly corrupt and its just making me feel sick.",33);
+
+#PLAYER
+insert into player
+value(1,1);
+
+#ITEMS
+insert into item
+value(1,"Hoodie and sunglasses","Red hoodie and red sunglasses","Your everyday hoodie and super fancy sunglasses, all red and looking glorious i must say",18,null);
+insert into item
+value(2,"Pants and hat","Red pants and red hat","Dupe red cargo pants and fashionable looking hat. I seem to have good taste i must say",19,null);
+insert into item
+value(3,"Shoes and socks","Red shoes and red socks","Very expensive looking red sneakers and socks from same company, fashionably red of course",20,null);
+insert into item
+value(4,"Taxi coupon","Coupon with some scriblings on it.", "Seems like coupon is used for one time use for taxi travel",23,null);
+insert into item
+value(5,"Piece of paper","Piece of paper with cryptic notes on it","Alien Communications device: 
+Ships don’t sail: 
+Ships don’t sail when you have no aim or bravery to command. And the courage to sail is often found in a good drink that makes justice for your true name. 
+I am water: 
+I am water. I am not solid. I require a number on me to be what I am and I strive to be number one. What am i? 
+Castle Brightwall:
+Ahoy! 
+A hoy! You now sail under your true name, but as a free man.
+The spirit lives 
+Your spirit lives on yet the number has grown from i to o.", 23,null);
+insert into item
+value(6,"Wallet", "Contains a Coca cola credit card", "It your employer name and ID in it, This should enable me to travel around freely",26,null);
+insert into item
+value(7,"Phone", "CPhone with bright red covers", "Logging in to your email.
+            Welcome back mr Morgan Captive
+            Accessing latest emails
+            From mr Jack daniels (Jack.D@Whiskers.dom)
+            Hey man lets go have a drink someday, I miss the good old days!          
+            From mr. John Jackson(Jackson.J@Coca-Cola.cola)
+            Morgan please bring the package to me when you recieve it, straight to our main offices at the enterprise avenue
+        
+            
+            From mr.Secret Agent(Secret.A@unknown.dot)
+            Hey Morgan. Im gonna bring you the package from our lab at 5amt tuesday morning.
+            please be waiting for me at the location X
+            
+            End of recent emails",26,null);
+insert into item
+value(8,"Coin","Old busted coin", "Just an old coin that looks like it has been through alot, I guess someone could still want it for emotional value",6,null);
+
+#Puzzle
+insert into puzzle
+values(1,2,"Seems like Mike wants to play rock paper and scissors against you. Mike seems like an experienced player so be wary of the tricks he has learned through the years",18);
+insert into puzzle
+values(2,2,"Steve just keeps looking you in the eyes and repeating the same sentence.. what could it mean?",19);
+insert into puzzle
+values(3,2,"Reggie seems to be somewhat delutional and his personality is all over the place, It's almost like he thinks he's some sort of celebrity.. hmm who could he be?",20);
+insert into puzzle
+values(4,2,"What did i get myself into again.. Harald wants me to retrieve an old worthless coin from the opposite side of the highway with cars constantly running by at full speed. Well it's all or nothing i guess",6);
+insert into puzzle
+values(5,2,"Papa John seems to like pizza. He also seems to be crazy. I mean what in the world could 'Your game is over! I have revealed that aliens have contacted you' and 'I have locked your secret weapon away'",23);
+insert into puzzle
+values(6,2,"Phone seems to be asking for a username and password, maybe I have something that could help me remember?",null);
+insert into puzzle
+values(7,2,"Andy seems to want to stop me , how could i convince him not to?",27);
+insert into puzzle
+values(8,2,"Not this again.",null);
+insert into puzzle
+values(9,2,"Goons are circling around me, I better try to sneak by unnoticed",14);
+insert into puzzle
+values(10,2,"Here comes the big bad boss, I better be prepared to outsmart him in every aspect",33);
+insert into puzzle
+values(11,2,"Haralds coin",22);
+insert into puzzle
+values(12,2,"Policestation Reporting the crime",8);
+insert into puzzle
+values(13,2,"Riding the taxi",24);
+
+#DIALOGS
+
+
+#Location Allowed
+
+insert into locationallowed
+values("Up",1,2,1,1);
+insert into locationallowed
+values("Talk to Mike",2,18,1,2);
+insert into locationallowed
+values("Bye",18,2,1,3);
+insert into locationallowed
+values("Talk to Steve",2,19,1,4);
+insert into locationallowed
+values("Bye",19,2,1,5);
+insert into locationallowed
+values("Talk to Reggie",2,20,1,6);
+insert into locationallowed
+values("Bye",20,2,1,7);
+insert into locationallowed
+values("South",2,3,2,8);
+insert into locationallowed
+values("Talk to Wendy",3,21,1,9);
+insert into locationallowed
+values("Bye",21,3,1,10);
+insert into locationallowed
+values("Talk to Harald",3,22,1,11);
+insert into locationallowed
+values("Bye",2,3,1,12);
+insert into locationallowed
+values("West",3,6,2,13);
+insert into locationallowed
+values("East",6,3,1,14);
+insert into locationallowed
+values("South",3,4,2,15);
+insert into locationallowed
+values("Talk to Papa John",4,23,1,16);
+insert into locationallowed
+values("Bye",23,4,1,17);
+insert into locationallowed
+values("North",4,3,1,18);
+insert into locationallowed
+values("East",3,5,2,19);
+insert into locationallowed
+values("Talk to Ranjit",3,24,1,20);
+insert into locationallowed
+values("Bye",24,3,1,21);
+insert into locationallowed
+values("West",5,3,1,22);
+insert into locationallowed
+values("North",5,7,1,23);
+insert into locationallowed
+values("East",5,11,2,24);
+insert into locationallowed
+values("West",7,8,1,25);
+insert into locationallowed
+values("Talk to Police Officer",8,26,1,26);
+insert into locationallowed
+values("Bye",26,8,1,27);
+insert into locationallowed
+values("East",8,7,1,28);
+insert into locationallowed
+values("East",7,10,2,29);
+insert into locationallowed
+values("Talk to Matt",10,28,1,30);
+insert into locationallowed
+values("Bye",28,10,1,31);
+insert into locationallowed
+values("West",10,7,1,32);
+insert into locationallowed
+values("North",7,9,1,33);
+insert into locationallowed
+values("South",9,7,1,36);
+insert into locationallowed
+values("South",7,5,2,37);
+insert into locationallowed
+values("East",5,11,2,38);
+insert into locationallowed
+values("Talk to Andy",11,27,1,39);
+insert into locationallowed
+values("Bye",27,11,1,40);
+insert into locationallowed
+values("Talk to Lionel",11,31,1,41);
+insert into locationallowed
+values("Bye",31,11,1,42);
+insert into locationallowed
+values("Talk to Michael",11,30,1,43);
+insert into locationallowed
+values("Bye",30,11,1,44);
+insert into locationallowed
+values("North",11,13,2,45);
+insert into locationallowed
+values("South",13,11,1,46);
+insert into locationallowed
+values("Talk to Richard",13,29,1,47);
+insert into locationallowed
+values("Bye",29,13,1,48);
+insert into locationallowed
+values("South",11,15,2,49);
+insert into locationallowed
+values("West",11,5,1,50);
+insert into locationallowed
+values("East",11,12,1,51);
+insert into locationallowed
+values("South",12,14,2,52);
+insert into locationallowed
+values("Talk to Enrique",14,32,1,53);
+insert into locationallowed
+values("Bye",32,14,1,54);
+insert into locationallowed
+values("West",14,15,1,55);
+insert into locationallowed
+values("Use Elevator",15,16,1,56);
+insert into locationallowed
+values("Up",16,17,1,57);
+insert into locationallowed
+values("Talk to Pepsi CEO",17,33,1,58);
+insert into locationallowed
+values("Bye",33,17,1,59);
+insert into locationallowed
+values("Use Elevator",17,16,1,60);
+insert into locationallowed
+values("Down",16,15,1,61);
+insert into locationallowed
+values("North",15,11,1,62);
+insert into locationallowed
+values("East",15,14,1,63);
+insert into locationallowed
+values("North",14,12,1,64);
+insert into locationallowed
+values("North",3,2,1,65);
+
+
+#Mike
+#kysymykset
+insert into questions values (1, "Tell me about Steve.", 18);
+insert into questions values (2, "Tell me about Reggie.", 18);
+insert into questions values (3, "Tell me about yourself.", 18);
+#Vastaukset kysymyksiin
+insert into dialog 
+values (1, "Steve is weird, for some reason he just keeps saying the same thing over and over with no response. Until you say it back to him.", 18, 1);
+insert into dialog 
+values (2, "Reggie just loves spreading the message of god. Dont know why. maybe you shuold ask him.", 18, 2);
+insert into dialog 
+values (3, "I was a ships captain before i had a crab fishing accident, where i lost few of my limbs.", 18, 3);
+
+
+#Steve
+#kysymykset
+insert into questions values (4, "Tell me about Mike.", 19);
+insert into questions values (5, "Tell me about Reggie.", 19);
+insert into questions values (6, "Tell me about yourself.", 19);
+#Vastaukset kysymyksiin
+insert into dialog 
+values (4, "Phones have lights.", 19, 4);
+insert into dialog 
+values (5, "Phones have lights!", 19, 5);
+insert into dialog 
+values (6, "Phones have lights?", 19, 6);
+
+#Reggie
+#kysymykset
+insert into questions values (7, "Tell me about Steve.", 20);
+insert into questions values (8, "Tell me about Mike.", 20);
+insert into questions values (9, "Tell me about yourself.", 20);
+#Vastaukset kysymyksiin
+insert into dialog 
+values (7, "Steve he is one of my disciples just like Mike. He has been blessed with my fathers wisdom and has seen the truth. Thats why he cant understand anything else but his own babling.", 20, 7);
+insert into dialog 
+values (8, "Mike is a broken in more ways than just his body. Thats why i try give him the light of my fathers blessing.", 20, 8);
+insert into dialog 
+values (9, "Reggie is the name my earthly parents gave me. I cant use the name my father gave me, because people are not ready for the truth and dont want salvation from eternal damnation.", 20, 9);
+
+
+#Wendy
+#kysymykset
+insert into questions values (10, "Tell me about yourself", 21);
+insert into questions values (11, "Where can i find Harald?", 21);
+insert into questions values (33, "Where is the police station?",21);
+#Vastaukset kysymyksiin
+insert into dialog 
+values (10, "I am just a student at the university, working as a waiter to fund my studies.", 21, 10);
+insert into dialog 
+values (11, "You can find Harald by the highway. Hes there playing his stupid game.", 21, 11);
+insert into dialog
+values (33, "The station is located in the north part of town.",21,33);
+
+#Harald
+#kysymykset
+insert into questions values (12, "Why do you run across the highway?", 22);
+insert into questions values (13, "Are you crazy?", 22);
+insert into questions values (14, "Tell me about yourself.", 22);
+#vastaukset
+insert into dialog 
+values (12, "Running through the highway is a hobby of mine. I do it every day, its the secret to my youthfull looks.", 22, 12);
+insert into dialog
+values (13, "YES!!!!!!!!!!", 22, 13);
+insert into dialog 
+values (14, "I am just a simpple man with a simpple hobby. Thats all you need to know.", 22, 14);
+
+
+#Papa John
+#kysymykset
+insert into questions values (15, "Do you know what happened to me?", 23);
+insert into questions values (16, "Why so many pizza boxes?", 23);
+insert into questions values (17, "Is there anything wrong with pizza?", 23);
+#Vastaukset
+insert into dialog 
+values (15, "Saw you fighting three goons last night, they sure looked like a scary bunch. All dressed in blue. You looked like a little child compared to them in size.", 23,15);
+insert into dialog 
+values (17, "Pinapple and pizza just don't mix.", 23, 17);
+insert into dialog 
+values (16, "Cant you see they are collecttables one from every pizza joint in the city.", 23, 16);
+
+
+#Ranjit
+#kysymykset
+insert into questions values (18, "Why did you become a taxidriver?", 24);
+insert into questions values (19, "Take me to the south part of town?", 24);
+#vastaukset
+insert into dialog 
+values (18, "I became a taxidriver so no one could tell me what to do.", 24, 18);
+insert into dialog 
+values (19, "You dont wanna go there! It´s a bad place. I wuoldent take even my trash there.", 24, 19);
+
+#Police officer
+#kymysys
+insert into questions values (20, "Could you help me",26);
+#Vastaus
+insert into dialog values (20, "Cant you see i´m busy. Go talk to someone who cares", 26, 20);
+
+
+
+#Cafe clerk
+#kysymykset
+insert into questions values (22, "How often do i come here?", 28);
+insert into questions values (23, "How do you remember my name?", 28);
+insert into questions values (34, "What is my name?", 28);
+#vastaukset
+insert into dialog 
+values (22, "You come here almost every day. You order a large cup of coffee and sit at the computer for hours.", 28, 22);
+insert into dialog 
+values (23, "of course i remember your name, who could forget it after writing it hundreds of times.", 28, 23);
+insert into dialog 
+values (34, "Haahaha. Youre always trying to be funny mr. Captive. But for youre amusement i will play along. Youre name is Morgan captive.", 28, 34);
+#John
+#kysymykset
+insert into questions values (24, "Can i have a raise if get the recipe back?", 29);
+insert into questions values (25, "Whats my job?", 29);
+#vastaukset
+insert into dialog 
+values (24, "youre lucky if you even have job after this mess.", 29, 24);
+insert into dialog 
+values (25, "Stop asking stupid questions and get to work on that recipe.", 29, 25);
+
+#Pepsi goons
+
+#Michael
+#kysymykset
+insert into questions values (26, "Why am i banned from pepsilandia?",30);
+insert into questions values (27, "Why would you ban someone who has never been to pepsilandia?",30);
+#vastaukset
+insert into dialog
+values (26, "Because i say so.",30,26);
+insert into dialog 
+values (27, "Why not. I just dont like your ugly face.",30,27); 
+
+
+#Enrique
+#kysymykset
+insert into questions values (28, "Why the costume? isnt it a little bit too much?",32);
+insert into questions values (29, "Isnt that costume too small for you?",32);
+insert into questions values (38, "What is pepsi up to?",32);
+#vastaukset
+insert into dialog 
+values (28, "Why not. Its fun to be the hero for once.", 32, 28);
+insert into dialog 
+values (29, "No!!! Stop judging me!!! Youre a horrible person.", 32, 29);
+insert into dialog 
+values (38, "World domination! Dosent every big company want that?",32, 38);
+
+#Lionel
+#kysymykset
+insert into questions values (30, "Is it boring standing here?",31);
+insert into questions values (31, "Why are you standing here?",31);
+insert into questions values (37, "Is there any way inside the building?",31);
+#vastaukset
+insert into dialog 
+values (30, "No. It makes me feel important.", 31, 30);
+insert into dialog 
+values (31,"Orders from the big boss. Nobody is getting in today.",31,31);
+insert into dialog
+values (37, "Well one could get inside through pepsilandia.",31,37);
+
+#Andy
+#kymysys
+insert into questions values (32, "Could you help me",27);
+insert into questions values (36, "Why are you still after me?",27);
+#Vastaus
+insert into dialog values (32, "Cant you see i´m busy. Go talk to someone who cares", 27, 32);
+insert into dialog values (36, "You still have something we need.",27,36);
+#Events
+insert into events values (1, 2, 
+"You wake up. There is darkness all around you, with a dim light shining above you. 
+You feel something slimy and sticky underneath your hand and it smells like death around you.", 1);
+
+
+insert into events values (2, 2,
+"Bum: Look Reggie and Steve, sleeping beauty has woken up.
+Reggie: You´re right Mike.
+You see them fighting over clothes and realize you are naked.
+You:Give me my clothes back!",2);
+
+
+insert into events values (3, 2, "So you want your clothes back? You can have them if you beat me in a friendly game of rock, paper, scissors. wanna play?",18);
+
+
+insert into events values (4, 2, "Steve: Phones have lights.",19);
+
+
+insert into events values (5, 2, "Reggie: The lost lamb wants his clothes back. You can have them if you solve my riddle and figure out who i am really.",20);
+
+
+insert into events values (6, 2, 
+"Frightened by stander: Are you alright? I saw the bums drag you to the alley.
+Frightened by stander: You need to report this to the police!
+You: What? Who are you?
+Frightened by stander: My name is Wendy. 
+Wendy: I saw a old man picking up some stuff that dropped from you. you should go ask harald about him. He knows everyone around these street.",3);
+
+
+insert into events values (7, 2,
+"You: Are you harald? I need to ask you some questions. 
+Harald: If you want information you will have do something for me first.
+Harald: I droped a coin on the other side of the highway, retreave it for me and i will tell you everything.",6);
+
+
+
+insert into events values (8, 2, 
+"You: Are you Papa John?
+Papa John: Yes i am. looks like you finally made it out of the alley. I hope the bums didnt give you a hard time.
+You: I heard you have something that belongs to me?
+Papa John: Yes. You can have your belongings if you find them. Its a little messy around here and i cant remember where i put them.",4);
+
+
+insert into events values (9,2,
+"Ranjit: Hellooo. My name is Ranjit.
+Ranjit: Where would you like to go mr?",24);
+
+
+insert into events values (10,2,
+"You: I Would like to report a crime
+Policeman: Name?
+You: I dont know.
+Policeman: Stop fooling around, i am to old for this. Just give me your name?
+You: I really dont know.
+Policeman: Okay punk, get out of my station and dont come back until your ready to be serious.",8);
+
+
+insert into events values (12,2,
+"You see a cafe clerk behind the counter. He nods at you as you walk to the counter.
+Matt: You want the usual mr?
+You: You know who i am?
+Cafe clerk: Of course.",10);
+
+
+insert into events values (13,2,
+"A man approaches you who looks just like the police officer from the police station.
+You catch a glimpse of his badge and see that his name is andy.
+Andy: You better stop sticking your nose were it dosent belong.
+Andy: I am gonna tell you this only once, if you know whats good for you.",11);
+
+
+insert into events values (14, 2,
+"A man is walking at you looking very angry. He has a nametag on his shirt that says John.
+John: Where the hell have you been? do you know how late you are?
+You: I got in a little bit of trouble.
+John: Who cares. Do you have the recipe with you?
+You: What recipe?
+John: As your boss i command you to stop being such a smart ass
+John: Get back to your work station and dont show your face to me unless you have the recipe with you.",13);
+
+#kun lähtee pois coca-colalta
+insert into events values (15,2,
+"You try to enter the pepsi building but there are two men standing in front of the door.
+Pepsi goon1: Were closed. Nobody is getting through that door as long as i am standing here. So get lost punk.
+Pepsi goon2: You tell him Lionel.
+Lionel: Shut your mouth!
+pepsi goon2: Yes boss.",11);
+
+
+insert into events values (16,2,
+"A large man dressed in blue with the name michael in his nametag comes to talk to you
+Michael: Your banned from Pepsilandia, so beat it
+You: Why?
+Michael: Dont you understand me or do i have to use brute force?",12);
+
+
+insert into events values (17,2,
+"A costumed man approaches you.
+Costume guy: Welcome to pepsilandia i am Enrique.
+Enrique: You might wonder why this outfit.
+Enrique: But wonder no more i am pepsiman!!!",14);
+
+
+insert into events values (18,2, 
+"Pepsi ceo: Who the hell are you and what are you doing in my office?
+You: I am here to get back the recipe.
+Pepsi ceo: So your the guy my goons were supposed to get rid off and take the recipe.
+Pepsi ceo: Well at least they did something right by getting the recipe. Good help is so hard to find these days, dont you agree?", 17);
+
+#Memory Table
+insert into memory
+values(1,"Report","Wendys advice:","You realise you were a victim of a crime and you should go report it to the policestation.",null,33); 
+insert into memory
+values(2,"The Crime","Information provided by Papa John","You are told that you were robbed and beaten by some people dressed in blue that took you to the alley the day before. You now know when the bad things happened to you, should make it easier to report the crime",null,15); 
+insert into memory
+values(3,"Anonymous","First visit to police station, your name???!", "You went to the police station and tried to report the crime that you had been victim of. When they were doing a routine check and asked for your name you realised that you that you actually have no idea who you are..? They of course thought you were pulling a prank on them and just threw you out.",null,null); 
+insert into memory
+values(4,"Websurffing","Mysterious strangers input to your situation","After being thrown out from the police station. You visited the local internet café the day before you got robbed. Maybe I should go pay them a visit and see what I can find out?",null,null);
+insert into memory
+values(5,"I am","After the visit on internet cafe","I am Morgan Captive! The café clerk recognizes you as one of his previous customers and asks if you want the same as always, after talking to him he checks your name from the clientlist. You realise you are you.",null,34); 
+insert into memory
+values(6,"Work in progress","Second visit to policestation","This time i succesfully reported the crime and they handed me some of my belongings that had been returned to them. In your wallet you find a coca-cola credit card. You realise you work for the coca-cola company. Perhaps you should pay your workplace a visit?",null,null); 
+insert into memory
+values(7,"Open Sesame", "Phone to the past", "You remember you had your phones password written down somewhere.. Hmm where could it be.",null,null); 
+insert into memory
+values(8,"Package lost in time and space, well not really i just forgot what it was","You have lost something important, like really important!", "Go find out what. According to your email there should be some information stored in your office about the package. Wherever you happen to work. You now know your main objective",null,null); 
+insert into memory
+values(9,"Miss me?", "Pepsi goons giving you trouble", "I thought they already had the item? What's happening here why are they still after me? Good thing I managed to convince them I have been actually paid to work for them all along and not against them. Jokes on them and me at the same time, since I honestly have no way of knowing if that’s actually true or false. All I know is that they are still missing something that I have.",null,36); 
+insert into memory
+values(10,"Key to the heart of liquid","After visiting your office", "Pepsi has stolen an important recipe to what seems to be the next big thing coca-cola has been planning for, the good thing is that it was encrypted and they don’t have a key for it since I had it safely stored in my office. Better go get the recipe back from those evil blue people before they crack the code",null,null); 
+insert into memory
+values(11,"Sneaking around", "Gotta find another way in", "Pepsimen don’t seem too keen in letting me in through the front door, but I seem to remember an alternative passageway leading to their offices located somewhere in their amusement(less) park? The question is how do I know this?.. Maybe I really was a spy of sorts? Oh well better make due with what you got. I should go check out if im right.",null,37); 
+insert into memory
+values(12,"The World, The Big Bad Blue and The Rule","Pepsi CEO's Goals","Pepsi wants to take over the world with the recipe made by doctor Eindrinkstein. They must be stopped at all cost, because they will not stop at anything to achieve their goals, I remember that now.",null,38);
+
+
+create user 'dbuser10'@'localhost' identified by 'dbpass';
+grant select, insert, update, delete on colawars.* to dbuser10@localhost;
